@@ -24,4 +24,12 @@ describe('Fields description', () => {
     it('should return undefined if field is valid', () => {
         assert.isUndefined(customerDescriptor.fields.name.validate('John'));
     });
+
+    it('should return warning message if field is invalid', () => {
+        assert.equal(customerDescriptor.fields.name.warn('A'), 'Thie field Name must be a string with a minimum length of 2');
+    });
+
+    it('should return undefined if field is valid', () => {
+        assert.isUndefined(customerDescriptor.fields.name.warn('John'));
+    });
 });

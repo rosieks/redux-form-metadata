@@ -33,7 +33,7 @@ export function describeType<T>(description: Interfaces.IDescription<T>): Interf
             acc[field.name] = {
                 name: field.name,
                 validate: field.validate,
-                warn: field.validate,
+                warn: field.warn,
                 ...(field.props || {})
             };
             return acc;
