@@ -16,4 +16,12 @@ describe('Fields description', () => {
         assert.equal(customerDescriptor.fields.name['errors'], undefined);
         assert.equal(customerDescriptor.fields.name['warnings'], undefined);
     });
+
+    it('should return error message if field is invalid', () => {
+        assert.isString(customerDescriptor.fields.name.validate(null));
+    });
+
+    it('should return undefined if field is valid', () => {
+        assert.isUndefined(customerDescriptor.fields.name.validate('John'));
+    });
 });

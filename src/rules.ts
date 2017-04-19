@@ -1,3 +1,5 @@
+import { default as messagesEN } from './messages/en';
+
 type Rule = (value: any) => boolean;
 type RuleFactory = (param: any) => Rule;
 
@@ -37,8 +39,7 @@ export const asyncRules = {
     promise: (func: AsyncRule) => (value, dispatch) => func(value, dispatch)
 };
 
-export const messages = {
-};
+export const messages = messagesEN;
 
 export const addRule = (name: string, ruleFactory: RuleFactory, messageFactory: MessageFactory) => {
     rules[name] = ruleFactory;
