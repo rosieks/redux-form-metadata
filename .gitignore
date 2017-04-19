@@ -6,3 +6,6 @@ node_modules/
 
 # Temporary files
 .tmp/
+
+# Build
+dist/

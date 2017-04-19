@@ -1,7 +1,7 @@
 module.exports = {
   entry: './src/index.ts',
   output: {
-    filename: './[name].js'
+    filename: './dist/redux-form-metadata.min.js'
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js']
