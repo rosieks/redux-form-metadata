@@ -18,7 +18,7 @@ describe('Fields description', () => {
     });
 
     it('should return error message if field is invalid', () => {
-        assert.isString(customerDescriptor.fields.name.validate(null));
+        assert.equal(customerDescriptor.fields.name.validate(null), 'The Name field is required');
     });
 
     it('should return undefined if field is valid', () => {

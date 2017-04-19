@@ -26,7 +26,7 @@ export const addressDescriptor = describeType<Address>(addressDescription);
 
 export const customerDescription = {
     name: {
-        label: 'Street',
+        label: 'Name',
         placeholder: 'Enter your name',
         errors: {
             required: true,
