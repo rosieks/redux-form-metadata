@@ -1,0 +1,1 @@
+export const message = template => (field, param) => template(field.label || field.name, param);

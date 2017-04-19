@@ -1,0 +1,11 @@
+- [ ] Accessing other values
+- [ ] New rule - equalTo
+- [ ] Class level validation
+- [ ] New async rule - remote/http
+- [ ] Error messages in English
+- [ ] Error messages in other languages
+- [ ] Error message factories: ```(field, param) => `The field ${field.label} must be a string with a maximum length of ${param}.```
+- [ ] Deep validation
+
+- [ ] Integration test for JSX/TSX
+- [ ] Think about naming - `redux-form-describe` vs `redux-form-metadata` vs `redux-form-annotate` 
