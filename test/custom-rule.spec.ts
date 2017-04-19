@@ -5,8 +5,8 @@ import 'mocha';
 
 describe('Custom rules', () => {
 
-    addRule('simpleRule', _ => value => value === 5, null);
-    addRule('paramRule', param => value => value === param, null);
+    addRule('simpleRule', _ => value => value === 5, (field, param) => 'Simple rule message');
+    addRule('paramRule', param => value => value === param, (field, param) => `Rule with param ${param}`);
 
     let descriptor = describeType<Customer>({
         name: {
@@ -21,13 +21,24 @@ describe('Custom rules', () => {
         }
     });
 
-    it('should return true if value is equal to 5', () => {
-        assert.equal(descriptor.fields.name.validate(5), true);
-        assert.equal(descriptor.fields.name.validate(10), false);
+    describe('paramless rule', () => {
+        it('should return undefine if value is equal to 5', () => {
+            assert.equal(descriptor.fields.name.validate(5), undefined);
+        });
+
+        it('should return error message if value is invalid', () => {
+            assert.equal(descriptor.fields.name.validate(10), 'Simple rule message');   
+        });
     });
 
-    it('should return true if value is equal to param ', () => {
-        assert.equal(descriptor.fields.email.validate(5), false);
-        assert.equal(descriptor.fields.email.validate(10), true);
+    describe('rule with param', () => {
+
+        it('should return undefined if value is equal to param ', () => {
+            assert.equal(descriptor.fields.email.validate(10), undefined);
+        });
+
+        it('should return error message if value is invalid', () => {
+            assert.equal(descriptor.fields.email.validate(5), 'Rule with param 10');
+        });
     });
 });
