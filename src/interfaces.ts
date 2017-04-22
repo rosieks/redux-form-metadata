@@ -11,14 +11,14 @@ type IFieldDescription<T> = {
 };
 
 export type IDescriptor<T> = {
-    form,
+    form: IFormDescriptor,
     fields: IFieldDescriptors<T>
 };
 
 export type IFormDescriptor = {
     validate,
     asyncValidate,
-    async
+    asyncBlurFields: string[]
     warn,
 
 }

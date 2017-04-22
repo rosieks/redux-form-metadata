@@ -3,8 +3,8 @@ import { createValidator, createAsyncValidator, combineAsyncValidators } from '.
 
 function describeForm(fields) {
     return {
-        validate: value => fields.reduce((errors, field) => (errors[field.name] = field.validate[value[field.name]], errors), {}),
-        warn: value => fields.reduce((warnings, field) => (warnings[field.name] = field.warn[value[field.name]], warnings), {}),
+        validate: value => fields.reduce((errors, field) => (errors[field.name] = field.validate(value[field.name]), errors), {}),
+        warn: value => fields.reduce((warnings, field) => (warnings[field.name] = field.warn(value[field.name]), warnings), {}),
         asyncValidate: combineAsyncValidators(fields.filter(x => x.asyncValidator)),
         asyncBlurFields: fields.filter(x => x.asyncValidate).map(x => x.name)
     }

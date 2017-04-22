@@ -15,7 +15,9 @@ export function createValidator(errors, field) {
         .filter(rule => rules[rule])
         .map(rule => createRule(rule, errors[rule], field));
 
-    return value => currentRules.map(rule => mapToErrorResult(rule, value))[0]; // todo: return first that failed
+    return value => currentRules
+        .map(rule => mapToErrorResult(rule, value))
+        .filter(result => result !== undefined)[0]; // todo: return first that failed
 }
 
 export function createAsyncValidator(errors) {

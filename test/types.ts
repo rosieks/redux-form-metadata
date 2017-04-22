@@ -1,5 +1,7 @@
 import { describeType } from './../src'
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 export type Address = {
     street: string,
     city: string
@@ -30,7 +32,8 @@ export const customerDescription = {
         placeholder: 'Enter your name',
         errors: {
             required: true,
-            maxLength: 30
+            maxLength: 30,
+            promise: (value, _) => sleep(50).then(() => true), 
         },
         warnings: {
             minLength: 2
@@ -57,7 +60,8 @@ export const customerDescription = {
         label: 'E-mail',
         errors: {
             required: true,
-            email: true
+            email: true,
+            promise: (value, _) => sleep(50).then(() => true)
         }
     },
     phone: {

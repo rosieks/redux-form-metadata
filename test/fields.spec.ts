@@ -21,6 +21,10 @@ describe('Fields description', () => {
         assert.equal(customerDescriptor.fields.name.validate(null), 'The Name field is required');
     });
 
+    it('should return error message if second rule is invalid', () => {
+        assert.equal(customerDescriptor.fields.name.validate('Very long name that is longer than 30 chartacters'), 'Thie field Name must be a string with a maximum length of 30');
+    });
+
     it('should return undefined if field is valid', () => {
         assert.isUndefined(customerDescriptor.fields.name.validate('John'));
     });
