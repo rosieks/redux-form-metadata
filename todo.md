@@ -5,7 +5,10 @@
 - [ ] Error messages in English
 - [ ] Error messages in other languages
 - [x] Error message factories: ```(field, param) => `The field ${field.label} must be a string with a maximum length of ${param}.```
+- [ ] Error messages setup on field/rule level
+- [ ] Error message returned by rule
 - [ ] Deep validation
 
 - [ ] Integration test for JSX/TSX
-- [ ] Think about naming - `redux-form-describe` vs `redux-form-metadata` vs `redux-form-annotate` 
+- [ ] Think about naming - `redux-form-describe` vs `redux-form-metadata` vs `redux-form-annotate`
+- [ ] Tests for asyncValidate 
