@@ -47,7 +47,12 @@ function createRule(rule, param, field) {
 }
 
 function mapToErrorResult(rule, value, context) {
-    return rule.rule(value, context) ? undefined : rule.message();
+    const result = rule.rule(value, context);
+    if (typeof result === 'string') {
+        return result;
+    } else {
+        return result ? undefined : rule.message();
+    }
 }
 
 function createContext(allValues) {

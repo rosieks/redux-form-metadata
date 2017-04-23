@@ -6,7 +6,7 @@
 - [ ] Error messages in other languages
 - [x] Error message factories: ```(field, param) => `The field ${field.label} must be a string with a maximum length of ${param}.```
 - [ ] Error messages setup on field/rule level
-- [ ] Error message returned by rule
+- [x] Error message returned by rule
 - [ ] Deep validation
 
 - [ ] Integration test for JSX/TSX

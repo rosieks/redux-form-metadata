@@ -39,12 +39,16 @@ describe('Fields description', () => {
 
     it('should support rules that use other fields', () => {
         let changePassword = {
-            newPassword: 'test',
-            confirmPassword: 'test'
+            newPassword: 'Test1234',
+            confirmPassword: 'Test1234'
         };
         let actual = changePasswordDescriptor.fields.confirmPassword.validate(
             changePassword.confirmPassword,
             changePassword);
         assert.equal(actual, undefined);
+    });
+
+    it('should return message returned by validation rule', () => {
+        assert.equal(changePasswordDescriptor.fields.newPassword.validate('test'), 'New password is too weak');
     })
 });

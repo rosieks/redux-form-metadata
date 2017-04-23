@@ -25,12 +25,20 @@ export type ChangePassword = {
 export const changePasswordDescription = {
     oldPassword: {
         errors: {
-            required: true
+            required: true,
         }
     },
     newPassword: {
         errors: {
-            required: true
+            required: true,
+            validate: value => {
+                console.log(value);
+                if (/[A-Z]/.test(value) && /[0-9]/.test(value) && value.length >= 8) {
+                    return true;
+                } else {
+                    return 'New password is too weak';
+                }
+            }
         }
     },
     confirmPassword: {
