@@ -90,7 +90,10 @@ describe('Built-in rules', () => {
     });
 
     describe('dateISO', () => {
-        testCase(rules.dateISO(), null, true, 'should return true if value is null'); 
+        testCase(rules.dateISO(), null, true, 'should return true if value is null');
+
+        testCase(rules.dateISO(), '2010-01-01', true, 'should return true if value is correct ISO date');
+        testCase(rules.dateISO(), 'test', false, 'should return false if value is custom text');
     });
 
     describe('number', () => {
