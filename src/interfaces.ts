@@ -2,7 +2,7 @@ export type IDescription<T> = {
     [P in keyof T]?: IFieldDescription<T[P]>
 };
 
-type IFieldDescription<T> = {
+export type IFieldDescription<T> = {
     label?: string,
     placeholder?: string,
     descriptor?,
