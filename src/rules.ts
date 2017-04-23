@@ -11,10 +11,16 @@ type AsyncRuleFactory = (param: any) => AsyncRule;
 
 type MessageFactory = (field, param) => string;
 
+type Condition = (allValues) => boolean;
+
 const optional = (rule: Rule) => (value: any, context?: RuleContext) => !value || rule(value, context);
+const conditional = (condition: boolean | Condition, rule: Rule) => (value: any, context?: RuleContext) => {
+    const isRequired = typeof condition === 'function' ? condition(context.object) : !!condition;
+    return isRequired ? rule(value, context) : true;
+}
 
 export const rules = {
-    required: () => value => !!value && (!Array.isArray(value) || value.length > 0),
+    required: (condition?: boolean | Condition) => conditional(condition, (value, allValues) => !!value && (!Array.isArray(value) || value.length > 0)),
     
     min: param => optional(value => value >= param),
 
@@ -24,7 +30,7 @@ export const rules = {
 
     maxLength: param => optional(value => value.length <= param),
 
-    pattern: (param: RegExp) => optional(value => param.test(value)),
+    pattern: (pattern: RegExp) => optional(value => pattern.test(value)),
 
     number: () => rules.pattern(/^(?:-?\d+|-?\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/),
 
@@ -38,7 +44,7 @@ export const rules = {
 
     digits: () => rules.pattern(/^\d+$/),
 
-    equalTo: (param: string) => optional((value, context) => value == context.object[param])
+    equalTo: (key: string) => optional((value, context) => value == context.object[key])
 };
 export const asyncRules = {
     promise: (func: AsyncRule) => (value, dispatch) => func(value, dispatch)

@@ -3,11 +3,17 @@ import { assert } from 'chai';
 
 describe('Built-in rules', () => {
     describe('required', () => {
-        testCase(rules.required(), 'test', true, 'should return true if value is provider');
-        testCase(rules.required(), null, false, 'should return false if value is null');
-        testCase(rules.required(), undefined, false, 'should return false if value is undefined');
-        testCase(rules.required(), '', false, 'should return false if value is empty string');
-        testCase(rules.required(), [], false, 'should return false if value is empty array');
+        testCase(rules.required(true), 'test', true, 'should return true if value is provider');
+        testCase(rules.required(true), null, false, 'should return false if value is null');
+        testCase(rules.required(true), undefined, false, 'should return false if value is undefined');
+        testCase(rules.required(true), '', false, 'should return false if value is empty string');
+        testCase(rules.required(true), [], false, 'should return false if value is empty array');
+
+        // condition required
+        testCase(rules.required(allValues => allValues.isRequired), null, true, 'should return true if value is null and condition is false', { isRequired: false });
+        testCase(rules.required(allValues => allValues.isRequired), null, false, 'should return false if value is null and condition is true', { isRequired: true });
+        testCase(rules.required(allValues => allValues.isRequired), 'test', true, 'should return true if value is not null and condition is false', { isRequired: false });
+        testCase(rules.required(allValues => allValues.isRequired), 'test', true, 'should return true if value is not null and condition is true', { isRequired: true });
     });
 
     describe('min', () => {
