@@ -1,14 +1,17 @@
 import { default as messagesEN } from './messages/en';
 
-type Rule = (value: any) => boolean;
+type Rule = (value: any, context?: RuleContext) => boolean;
 type RuleFactory = (param: any) => Rule;
+type RuleContext = {
+    object
+};
 
-type AsyncRule = (value: any, dispatch) => Promise<boolean> | Promise<string>;
+type AsyncRule = (value: any, dispatch, context?: RuleContext) => Promise<boolean> | Promise<string>;
 type AsyncRuleFactory = (param: any) => AsyncRule;
 
 type MessageFactory = (field, param) => string;
 
-const optional = (rule: Rule) => (value: any) => !value || rule(value);
+const optional = (rule: Rule) => (value: any, context?: RuleContext) => !value || rule(value, context);
 
 export const rules = {
     required: () => value => !!value && (!Array.isArray(value) || value.length > 0),
@@ -34,6 +37,8 @@ export const rules = {
     dateISO: () => rules.pattern(/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/),
 
     digits: () => rules.pattern(/^\d+$/),
+
+    equalTo: (param: string) => optional((value, context) => value == context.object[param])
 };
 export const asyncRules = {
     promise: (func: AsyncRule) => (value, dispatch) => func(value, dispatch)

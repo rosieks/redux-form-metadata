@@ -1,4 +1,4 @@
-import { customerDescriptor, customerDescription } from './types';
+import { customerDescriptor, customerDescription, changePasswordDescriptor } from './types';
 import { assert } from 'chai';
 
 describe('Fields description', () => {
@@ -36,4 +36,15 @@ describe('Fields description', () => {
     it('should return undefined if field is valid', () => {
         assert.isUndefined(customerDescriptor.fields.name.warn('John'));
     });
+
+    it('should support rules that use other fields', () => {
+        let changePassword = {
+            newPassword: 'test',
+            confirmPassword: 'test'
+        };
+        let actual = changePasswordDescriptor.fields.confirmPassword.validate(
+            changePassword.confirmPassword,
+            changePassword);
+        assert.equal(actual, undefined);
+    })
 });

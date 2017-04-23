@@ -16,6 +16,32 @@ export type Customer = {
     phone: string
 };
 
+export type ChangePassword = {
+    oldPassword: string,
+    newPassword: string,
+    confirmPassword: string,
+}
+
+export const changePasswordDescription = {
+    oldPassword: {
+        errors: {
+            required: true
+        }
+    },
+    newPassword: {
+        errors: {
+            required: true
+        }
+    },
+    confirmPassword: {
+        errors: {
+            required: true,
+            equalTo: 'newPassword'
+        }
+    }
+}
+export const changePasswordDescriptor = describeType<ChangePassword>(changePasswordDescription);
+
 export const addressDescription = {
     street: {
         label: 'Street',

@@ -98,10 +98,17 @@ describe('Built-in rules', () => {
         testCase(rules.digits(), 'test123', false, 'should return false if value contains letters and digits');
         testCase(rules.digits(), 'test', false, 'should return false if value contains letters');
     });
+
+    describe('equalTo', () => {
+        testCase(rules.equalTo('prop2'), null, true, 'should return true if value is null');
+
+        testCase(rules.equalTo('prop2'), 'test', true, 'should return true is value is same as prop2 value', { prop2: 'test' });
+        testCase(rules.equalTo('prop2'), 'abc', false, 'should return false is value isn\'t same as prop2 value', { prop2: 'test' });
+    });
 });
 
-function testCase(rule, value, expected, description) {
+function testCase(rule, value, expected, description, object?) {
     it(description, () => {
-        assert.equal(rule(value), expected);
+        assert.equal(rule(value, { object }), expected);
     });
 }

@@ -5,18 +5,23 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Run mocha-webpack",
             "type": "node",
             "request": "launch",
-            "name": "Run mocha",
-            "runtimeExecutable": "npm",
-            "windows": {
-                "runtimeExecutable": "npm.cmd"
-            },
+            "port": 5858,
+            "program": "${workspaceRoot}/node_modules/mocha-webpack/bin/mocha-webpack",
+            "stopOnEntry": false,
+            "sourceMaps": true,
+            "args": [],
+            "cwd": "${workspaceRoot}",
+            "preLaunchTask": null,
+            "runtimeExecutable": null,
             "runtimeArgs": [
-                "run-script",
-                "test-ci"
+                "--debug-brk"
             ],
-            "port": 5858
+            "env": { "NODE_ENV": "testing"},
+            "console": "internalConsole",
+            "outFiles": []
         }
     ]
 }
