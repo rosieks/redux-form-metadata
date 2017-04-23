@@ -111,6 +111,11 @@ describe('Built-in rules', () => {
         testCase(rules.equalTo('prop2'), 'test', true, 'should return true is value is same as prop2 value', { prop2: 'test' });
         testCase(rules.equalTo('prop2'), 'abc', false, 'should return false is value isn\'t same as prop2 value', { prop2: 'test' });
     });
+
+    describe('validate', () => {
+        testCase(rules.validate(value => value === 5), 5, true, 'should return true if value is 5');
+        testCase(rules.validate(value => value === 5), 10, false, 'should return false if value isn\'t 5');
+    });
 });
 
 function testCase(rule, value, expected, description, object?) {

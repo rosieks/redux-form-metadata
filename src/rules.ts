@@ -44,7 +44,9 @@ export const rules = {
 
     digits: () => rules.pattern(/^\d+$/),
 
-    equalTo: (key: string) => optional((value, context) => value == context.object[key])
+    equalTo: (key: string) => optional((value, context) => value == context.object[key]),
+
+    validate: (rule: Rule) => rule
 };
 export const asyncRules = {
     promise: (func: AsyncRule) => (value, dispatch) => func(value, dispatch)
