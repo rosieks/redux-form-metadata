@@ -1,3 +1,4 @@
 --webpack-config webpack.config-test.js
 --glob *.spec.{js,ts}
 --recursive
+--require source-map-support/register
