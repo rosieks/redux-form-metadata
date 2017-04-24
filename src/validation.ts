@@ -1,53 +1,66 @@
 import { rules, asyncRules, messages } from './rules';
 
 export function combineAsyncValidators(fields) {
+    debugger;
     return (values, dispatch) => Promise
-        .all(fields.map(f => f.asyncValidator(values[f.name], dispatch, values)))
-        .then(errors => fields
-            .map((field, index) => ({ name: field.name, error: errors[index] }))
-            .filter(field => field.error)
-            .reduce((errors, field) => (errors[field.name] = field.error, errors), {})
-        );
+        .all(fields.map(f => f.asyncValidate(values[f.name], dispatch, values)))
+        .then(errors => {
+            let invalidFields = fields
+                .map((field, index) => ({ name: field.name, error: errors[index] }))
+                .filter(field => field.error);
+
+            if (invalidFields.length > 0) {
+                let errorsMap = invalidFields
+                    .reduce((errors, field) => (errors[field.name] = field.error, errors), {});
+                throw errorsMap;
+            }
+        });
 }
 
 export function createValidator(errors, field) {
-    let currentRules = Object.keys(errors)
-        .filter(rule => rules[rule])
-        .map(rule => createRule(rule, errors[rule], field));
-
+    let currentRules = getRules(rules, errors, field);
     return (value, allValues) => {
         let context = createContext(allValues);
         return currentRules
-            .map(rule => mapToErrorResult(rule, value, context))
+            .map(rule => ({ result: rule.validate(value, context), rule }))
+            .map(result => normalizeResult(result))
             .filter(result => result !== undefined)[0];
     }
 }
 
-export function createAsyncValidator(errors) {
-    let currentRules = Object.keys(errors)
-        .filter(rule => asyncRules[rule])
-        .map(rule => asyncRules[rule](errors[rule]));
-
+export function createAsyncValidator(errors, field) {
+    let currentRules = getRules(asyncRules, errors, field);
     let asyncValidator = (value, dispatch, allValues) => {
         let context = createContext(allValues);
         return Promise
-            .all(currentRules.map(rule => rule(value, dispatch, context)))
-            .then(results => {
-                return results[0]; // todo: return first that failed
-            });
+            .all(currentRules.map(rule => rule.validate(value, dispatch, context)))
+            .then(results => currentRules
+                .map((rule, index) => ({ result: results[index], rule}))
+                .map(result => normalizeResult(result))
+                .filter(result => result !== undefined)[0]
+            );
     };
     return currentRules.length > 0 ? asyncValidator : null;
 }
 
-function createRule(rule, param, field) {
+function getRules(ruleset, errors, field) {
+    return Object.keys(errors)
+        .filter(rule => ruleset[rule])
+        .map(rule => createRule(ruleset, rule, errors[rule], field));
+}
+
+function createRule(rules, rule, param, field) {
     return {
-        rule: rules[rule](param),
+        validate: rules[rule](param),
         message: () => messages[rule](field, param)
     };
 }
 
-function mapToErrorResult(rule, value, context) {
-    const result = rule.rule(value, context);
+function validate(rule, value, context) {
+    return rule.rule(value, context);
+}
+
+function normalizeResult({ result, rule }) {
     if (typeof result === 'string') {
         return result;
     } else {
