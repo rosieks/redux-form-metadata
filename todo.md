@@ -8,6 +8,7 @@
 - [ ] Error messages setup on field/rule level
 - [x] Error message returned by rule
 - [ ] Deep validation
+- [ ] Refactor `describeType` to support extensibility. Validation should be one of extensions.
 
 - [ ] Integration test for JSX/TSX
 - [ ] Think about naming - `redux-form-describe` vs `redux-form-metadata` vs `redux-form-annotate`

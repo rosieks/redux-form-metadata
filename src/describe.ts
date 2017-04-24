@@ -5,7 +5,7 @@ function describeForm(fields) {
     return {
         validate: value => fields.reduce((errors, field) => (errors[field.name] = field.validate(value[field.name]), errors), {}),
         warn: value => fields.reduce((warnings, field) => (warnings[field.name] = field.warn(value[field.name]), warnings), {}),
-        asyncValidate: combineAsyncValidators(fields.filter(x => x.asyncValidator)),
+        asyncValidate: combineAsyncValidators(fields.filter(x => x.asyncValidate)),
         asyncBlurFields: fields.filter(x => x.asyncValidate).map(x => x.name)
     }
 }
@@ -15,12 +15,13 @@ function describeFields<T>(description: Interfaces.IDescription<T>) {
         .keys(description)
         .map(name => {
             let { errors, warnings, ...props } = description[name];
+            let field = { name, ...props};
             return {
                 name,
                 props,
-                validate: createValidator(errors || {}, { name, ...props }),
-                warn: createValidator(warnings || {}, { name, ...props }),
-                asyncValidate: createAsyncValidator(errors || {}),
+                validate: createValidator(errors || {}, field),
+                warn: createValidator(warnings || {}, field),
+                asyncValidate: createAsyncValidator(errors || {}, field),
             };
         });
 }

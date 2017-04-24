@@ -4,6 +4,7 @@ var DeclarationBundlerPlugin = require('declaration-bundler-webpack-plugin'),
 
 module.exports = {
   entry: './src/index.ts',
+  devtool: "source-map",
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'redux-form-metadata.min.js',

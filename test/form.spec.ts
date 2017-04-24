@@ -26,6 +26,24 @@ describe('Form description', () => {
     });
 
     describe('async', () => {
+
+        it('should throw object with error messages for invalid fields', done => {
+            customerDescriptor.form.asyncValidate({}).catch(err => {
+                assert.equal(err.name, "Invalid name");
+                assert.equal(err.email, "Invalid e-mail");
+                done();
+            });
+        });
+
+        it('should resolve without error', done => {
+            customerDescriptor.form.asyncValidate({ name: 'async', email: 'async@test' })
+                .catch(err => {
+                    assert.isNull(err);
+                    done();
+                })
+                .then(done);
+        });
+
         it('should return array containing fields with async validator', () => {
             assert.equal(customerDescriptor.form.asyncBlurFields.length, 2);
             assert.equal(customerDescriptor.form.asyncBlurFields[0], 'name');

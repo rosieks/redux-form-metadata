@@ -32,7 +32,6 @@ export const changePasswordDescription = {
         errors: {
             required: true,
             validate: value => {
-                console.log(value);
                 if (/[A-Z]/.test(value) && /[0-9]/.test(value) && value.length >= 8) {
                     return true;
                 } else {
@@ -67,7 +66,7 @@ export const customerDescription = {
         errors: {
             required: true,
             maxLength: 30,
-            promise: (value, _) => sleep(50).then(() => true), 
+            promise: (value, _) => sleep(50).then(() => value === 'async' ? true : "Invalid name"), 
         },
         warnings: {
             minLength: 2
@@ -95,7 +94,7 @@ export const customerDescription = {
         errors: {
             required: true,
             email: true,
-            promise: (value, _) => sleep(50).then(() => true)
+            promise: (value, _) => sleep(50).then(() => value === "async@test" ? true : "Invalid e-mail")
         }
     },
     phone: {
