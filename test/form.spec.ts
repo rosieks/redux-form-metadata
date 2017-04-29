@@ -44,6 +44,14 @@ describe('Form description', () => {
                 .then(done);
         });
 
+        it('should throw object with error message for blurred field', done => {
+        customerDescriptor.form.asyncValidate({}, null, null, 'name').catch(err => {
+                assert.equal(err.name, "Invalid name");
+                assert.equal(err.email, undefined);
+                done();
+            });    
+        })
+
         it('should return array containing fields with async validator', () => {
             assert.equal(customerDescriptor.form.asyncBlurFields.length, 2);
             assert.equal(customerDescriptor.form.asyncBlurFields[0], 'name');

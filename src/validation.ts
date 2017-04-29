@@ -2,19 +2,22 @@ import { rules, asyncRules, messages } from './rules';
 
 export function combineAsyncValidators(fields) {
     debugger;
-    return (values, dispatch) => Promise
-        .all(fields.map(f => f.asyncValidate(values[f.name], dispatch, values)))
-        .then(errors => {
-            let invalidFields = fields
-                .map((field, index) => ({ name: field.name, error: errors[index] }))
-                .filter(field => field.error);
+    return (values, dispatch, _, blurredField) => {
+        let fieldsToValidate = fields.filter(f => !blurredField || f.name === blurredField);
+        return Promise
+            .all(fieldsToValidate.map(f => f.asyncValidate(values[f.name], dispatch, values)))
+            .then(errors => {
+                let invalidFields = fieldsToValidate
+                    .map((field, index) => ({ name: field.name, error: errors[index] }))
+                    .filter(field => field.error);
 
-            if (invalidFields.length > 0) {
-                let errorsMap = invalidFields
-                    .reduce((errors, field) => (errors[field.name] = field.error, errors), {});
-                throw errorsMap;
-            }
-        });
+                if (invalidFields.length > 0) {
+                    let errorsMap = invalidFields
+                        .reduce((errors, field) => (errors[field.name] = field.error, errors), {});
+                    throw errorsMap;
+                }
+            });
+    };
 }
 
 export function createValidator(errors, field) {
