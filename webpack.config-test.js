@@ -1,6 +1,8 @@
 var path = require('path');
 var nodeExternals = require('webpack-node-externals');
 
+const coverage = process.env.NODE_ENV === 'coverage';
+
 module.exports = {
     resolve: {
         modules: [path.resolve('./src'), 'node_modules'],
@@ -13,13 +15,18 @@ module.exports = {
     target: 'node',
     externals: [nodeExternals()],
     module: {
-        rules: [
+        rules: [].concat
+            (coverage ? {
+                test: /\.(j|t)sx?$/,
+                include: path.resolve('src'),
+                loader: 'istanbul-instrumenter-loader'
+            } : [],
             { 
-                test: /.tsx?$/, 
+                test: /\.tsx?$/, 
                 exclude: /(node_modules)/,
                 loader: 'ts-loader'
             }
-        ]
+        )        
     },
     devtool: '#inline-cheap-module-source-map'
 };

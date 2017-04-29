@@ -2,18 +2,29 @@
   "name": "redux-form-metadata",
   "version": "0.0.1",
   "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rosieks/redux-form-metadata.git"
+  },
   "main": "dist/redux-form-metadata.min.js",
   "scripts": {
     "dev": "webpack-dev-server --inline --hot",
     "build": "webpack -p",
     "test": "mocha-webpack --watch",
-    "test-ci": "mocha-webpack"
+    "test-ci": "mocha-webpack",
+    "cover": "cross-env NODE_ENV=coverage nyc --reporter=lcov --reporter=text npm run test-ci"
   },
   "keywords": ["redux", "react", "form", "validation"],
   "author": "Sławomir Rosiek",
   "license": "MIT",
+  "nyc": {
+    "include": [ "src/**/*.js"],
+    "instrument": false,
+    "sourceMap": true
+  },
   "devDependencies": {
     "@types/mocha": "2.2.40",
+    "@types/chai": "3.5.1",
     "mocha-webpack": "^1.0.0-beta.1",
     "mocha": "^3.2.0",
     "chai": "3.5.0",
@@ -26,6 +37,10 @@
     "react-redux": "5.0.4",
     "redux-form": "6.6.3",
     "redux": "3.6.0",
-    "declaration-bundler-webpack-plugin": "1.0.3"
+    "declaration-bundler-webpack-plugin": "1.0.3",
+
+    "cross-env":"4.0.0",
+    "istanbul-instrumenter-loader": "2.0.0",
+    "nyc":"10.3.0"
   }
 }
