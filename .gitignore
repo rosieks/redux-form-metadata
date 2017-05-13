@@ -7,6 +7,10 @@ node_modules/
 # Temporary files
 .tmp/
 
+# Coverage results
+coverage/
+.nyc_output/
+
 # Build
 dist/
 **/*.d.ts
