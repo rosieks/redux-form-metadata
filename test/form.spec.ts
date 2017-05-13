@@ -8,9 +8,20 @@ describe('Form description', () => {
             let errors = customerDescriptor.form.validate({});
             assert.equal(errors.name, 'The Name field is required');
             assert.equal(errors.age, 'The Age field is required');
-            assert.equal(errors.addresses, 'The Addresses field is required');
+            assert.equal(errors.addresses._error, 'The Addresses field is required');
             assert.equal(errors.email, 'The E-mail field is required');
             assert.equal(errors.phone, undefined);
+        });
+
+        it('should return errors for invalid nested field', () => {
+            let errors = customerDescriptor.form.validate({
+                addresses: [
+                    {}
+                ]
+            });
+
+            assert.equal(errors.addresses[0].street, 'The Street field is required');
+            assert.equal(errors.addresses[0].city, 'The City field is required');
         });
     });
 
@@ -53,6 +64,7 @@ describe('Form description', () => {
         })
 
         it('should return array containing fields with async validator', () => {
+            console.log(customerDescriptor.form.asyncBlurFields);
             assert.equal(customerDescriptor.form.asyncBlurFields.length, 2);
             assert.equal(customerDescriptor.form.asyncBlurFields[0], 'name');
             assert.equal(customerDescriptor.form.asyncBlurFields[1], 'email');

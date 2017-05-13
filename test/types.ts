@@ -52,9 +52,15 @@ export const changePasswordDescriptor = describeType<ChangePassword>(changePassw
 export const addressDescription = {
     street: {
         label: 'Street',
+        errors: {
+            required: true,
+        }
     },
     city: {
-        label: 'City'
+        label: 'City',
+        errors: {
+            required: true
+        }
     }
 };
 export const addressDescriptor = describeType<Address>(addressDescription);

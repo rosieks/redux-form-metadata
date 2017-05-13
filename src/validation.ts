@@ -21,53 +21,84 @@ export function combineAsyncValidators(fields) {
 }
 
 export function createValidator(errors, field) {
-    let currentRules = getRules(rules, errors, field);
+    let currentRules = getRules(rules, errors, field, false);
     return (value, allValues) => {
         let context = createContext(allValues);
-        return currentRules
+        return currentRules.joinResults(currentRules.rules
             .map(rule => ({ result: rule.validate(value, context), rule }))
-            .map(result => normalizeResult(result))
-            .filter(result => result !== undefined)[0];
+            .map(({ result, rule }) => rule.normalizeResult(result)));
     }
 }
 
 export function createAsyncValidator(errors, field) {
-    let currentRules = getRules(asyncRules, errors, field);
+    let currentRules = getRules(asyncRules, errors, field, true);
     let asyncValidator = (value, dispatch, allValues) => {
         let context = createContext(allValues);
         return Promise
-            .all(currentRules.map(rule => rule.validate(value, dispatch, context)))
-            .then(results => currentRules
+            .all(currentRules.rules.map(rule => rule.validate(value, dispatch, context)))
+            .then(results => currentRules.joinResults(currentRules.rules
                 .map((rule, index) => ({ result: results[index], rule}))
-                .map(result => normalizeResult(result))
-                .filter(result => result !== undefined)[0]
+                .map(({ result, rule}) => rule.normalizeResult(result)))
             );
     };
-    return currentRules.length > 0 ? asyncValidator : null;
+    return currentRules.rules.length > 0 ? asyncValidator : null;
 }
 
-function getRules(ruleset, errors, field) {
-    return Object.keys(errors)
+function getRules(ruleset, errors, field, isAsync) {
+    let simpleRules = Object.keys(errors)
         .filter(rule => ruleset[rule])
-        .map(rule => createRule(ruleset, rule, errors[rule], field));
+        .map(rule => createSimpleRule(ruleset, rule, errors[rule], field));
+    
+    if (field.descriptor && (!isAsync || field.descriptor.form.asyncBlurFields.length > 0)) {
+        return {
+            rules: [createComplexRule(field), ...simpleRules],
+            joinResults,
+        };
+    } else {
+        return {
+            rules: simpleRules,
+            joinResults: results => results.filter(r => r !== undefined)[0]
+        };
+    }
 }
 
-function createRule(rules, rule, param, field) {
+function joinResults(results) {
+    let [complexResult, ...simpleResults] = results;
+    let _error = simpleResults.filter(r => r !== undefined)[0];
+    let errors = {
+        ...complexResult
+    };
+    if (_error) {
+        errors._error = _error;
+    }
+    return Object.keys(errors).length > 0 ? errors : undefined;
+}
+
+function createSimpleRule(rules, rule, param, field) {
     return {
         validate: rules[rule](param),
-        message: () => messages[rule](field, param)
+        normalizeResult: result => normalizeResult(result, () => messages[rule](field, param))
     };
+}
+
+function createComplexRule(field) {
+    return {
+        validate: value => {
+            return !value || (Array.isArray(value) ? value.map(item => field.descriptor.form.validate(item)) : field.descriptor.form.validate(value));
+        },
+        normalizeResult: result => result
+    }
 }
 
 function validate(rule, value, context) {
     return rule.rule(value, context);
 }
 
-function normalizeResult({ result, rule }) {
+function normalizeResult(result, message) {
     if (typeof result === 'string') {
         return result;
     } else {
-        return result ? undefined : rule.message();
+        return result ? undefined : message();
     }
 }
 
