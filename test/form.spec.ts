@@ -20,6 +20,7 @@ describe('Form description', () => {
                 ]
             });
 
+            assert.equal(errors.addresses._error, undefined);
             assert.equal(errors.addresses[0].street, 'The Street field is required');
             assert.equal(errors.addresses[0].city, 'The City field is required');
         });
@@ -61,7 +62,7 @@ describe('Form description', () => {
                 assert.equal(err.email, undefined);
                 done();
             });    
-        })
+        });
 
         it('should return array containing fields with async validator', () => {
             console.log(customerDescriptor.form.asyncBlurFields);
