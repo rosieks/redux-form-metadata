@@ -1,7 +1,6 @@
 import { rules, asyncRules, messages } from './rules';
 
 export function combineAsyncValidators(fields) {
-    debugger;
     return (values, dispatch, _, blurredField) => {
         let fieldsToValidate = fields.filter(f => !blurredField || f.name === blurredField);
         return Promise
@@ -21,7 +20,7 @@ export function combineAsyncValidators(fields) {
 }
 
 export function createValidator(errors, field) {
-    let currentRules = getRules(rules, errors, field, false);
+    let currentRules = getRules(rules, errors, field);
     return (value, allValues) => {
         let context = createContext(allValues);
         return currentRules.joinResults(currentRules.rules
@@ -31,8 +30,8 @@ export function createValidator(errors, field) {
 }
 
 export function createAsyncValidator(errors, field) {
-    let currentRules = getRules(asyncRules, errors, field, true);
-    let asyncValidator = (value, dispatch, allValues) => {
+    let currentRules = getRules(asyncRules, errors, field);
+    let asyncValidate = (value, dispatch, allValues) => {
         let context = createContext(allValues);
         return Promise
             .all(currentRules.rules.map(rule => rule.validate(value, dispatch, context)))
@@ -41,23 +40,35 @@ export function createAsyncValidator(errors, field) {
                 .map(({ result, rule}) => rule.normalizeResult(result)))
             );
     };
-    return currentRules.rules.length > 0 ? asyncValidator : null;
+
+    return {
+        asyncValidate: currentRules.rules.length > 0 ? asyncValidate : null,
+        asyncBlurFields: currentRules.rulePaths
+    };
 }
 
-function getRules(ruleset, errors, field, isAsync) {
+function getFieldDescriptor(field) {
+    return field.typeDescriptor || field.arrayDescriptor;
+}
+
+function getRules(ruleset, errors, field) {
     let simpleRules = Object.keys(errors)
         .filter(rule => ruleset[rule])
         .map(rule => createSimpleRule(ruleset, rule, errors[rule], field));
     
-    if (field.descriptor && (!isAsync || field.descriptor.form.asyncBlurFields.length > 0)) {
+    let fieldDescriptor = getFieldDescriptor(field);
+    if (fieldDescriptor) {
+        let prefix = field.arrayDescriptor ? `${field.name}[].` : `${field.name}.`;
         return {
             rules: [createComplexRule(field), ...simpleRules],
             joinResults,
+            rulePaths: fieldDescriptor.form.asyncBlurFields.map(x => prefix + x),
         };
     } else {
         return {
             rules: simpleRules,
-            joinResults: results => results.filter(r => r !== undefined)[0]
+            joinResults: results => results.filter(r => r !== undefined)[0],
+            rulePaths: simpleRules.length > 0 ? [field.name] : []
         };
     }
 }
@@ -84,7 +95,7 @@ function createSimpleRule(rules, rule, param, field) {
 function createComplexRule(field) {
     return {
         validate: value => {
-            return !value || (Array.isArray(value) ? value.map(item => field.descriptor.form.validate(item)) : field.descriptor.form.validate(value));
+            return !value || (field.arrayDescriptor ? value.map(item => field.arrayDescriptor.form.validate(item)) : field.descriptor.form.validate(value));
         },
         normalizeResult: result => result
     }

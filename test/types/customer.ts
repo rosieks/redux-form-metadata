@@ -36,7 +36,7 @@ export const customerDescription = {
     },
     addresses: {
         label: 'Addresses',
-        descriptor: addressDescriptor,
+        arrayDescriptor: addressDescriptor,
         errors: {
             required: true
         }

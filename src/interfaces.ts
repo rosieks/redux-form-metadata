@@ -5,7 +5,8 @@ export type IDescription<T> = {
 export type IFieldDescription<T> = {
     label?: string,
     placeholder?: string,
-    descriptor?,
+    typeDescriptor?,
+    arrayDescriptor?,
     errors?,
     warnings?
 };

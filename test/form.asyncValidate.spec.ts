@@ -1,4 +1,4 @@
-import { customerDescriptor } from './types';
+import { customerDescriptor, projectDescriptor } from './types';
 import { assert } from 'chai';
 
 export const asyncValidate = () => {
@@ -33,6 +33,13 @@ export const asyncValidate = () => {
             assert.equal(customerDescriptor.form.asyncBlurFields.length, 2);
             assert.equal(customerDescriptor.form.asyncBlurFields[0], 'name');
             assert.equal(customerDescriptor.form.asyncBlurFields[1], 'email');
+        });
+
+        it('should return array containing fields with async validator including nested fields', () => {
+            assert.equal(projectDescriptor.form.asyncBlurFields.length, 3);
+            assert.equal(projectDescriptor.form.asyncBlurFields[0], 'name');
+            assert.equal(projectDescriptor.form.asyncBlurFields[1], 'members[].email');
+            assert.equal(projectDescriptor.form.asyncBlurFields[2], 'leader.email');
         });
     });
 };
