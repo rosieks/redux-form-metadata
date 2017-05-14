@@ -85,10 +85,21 @@ function joinResults(results) {
     return Object.keys(errors).length > 0 ? errors : undefined;
 }
 
-function createSimpleRule(rules, rule, param, field) {
+function createSimpleRule(rules, ruleName, ruleConfig, field) {
+    if (!ruleConfig.param || !ruleConfig.message) {
+        ruleConfig = {
+            param: ruleConfig.param !== undefined ? ruleConfig.param : ruleConfig,
+            message: messages[ruleName]
+        };
+    }
+
+    if (typeof ruleConfig.message === 'string') {
+        let message = ruleConfig.message;
+        ruleConfig.message = () => message;
+    }
     return {
-        validate: rules[rule](param),
-        normalizeResult: result => normalizeResult(result, () => messages[rule](field, param))
+        validate: rules[ruleName](ruleConfig.param),
+        normalizeResult: result => normalizeResult(result, () => ruleConfig.message(field, ruleConfig.param))
     };
 }
 

@@ -18,6 +18,22 @@ describe('Custom rules', () => {
             errors: {
                 paramRule: 10
             }
+        },
+        phone: {
+            errors: {
+                required: {
+                    param: true,
+                    message: 'Custom error message'
+                }
+            }
+        },
+        age: {
+            errors: {
+                min: {
+                    param: 15,
+                    message: (field, param) => `Your ${field.name} must be at least ${param}`
+                }
+            }
         }
     });
 
@@ -39,6 +55,13 @@ describe('Custom rules', () => {
 
         it('should return error message if value is invalid', () => {
             assert.equal(descriptor.fields.email.validate(5), 'Rule with param 10');
+        });
+    });
+
+    describe('rule with custom message', () => {
+        it('should return custom message if value is invalid', () => {
+            assert.equal(descriptor.fields.phone.validate(null), 'Custom error message');
+            assert.equal(descriptor.fields.age.validate(10), 'Your age must be at least 15');
         });
     });
 });
