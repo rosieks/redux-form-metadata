@@ -31,7 +31,7 @@ let customerDescriptor = describeType({
 @reduxForm({
     name: 'customer',
 
-    // this line inject properties related to validation like: validate, warn, asyncValidate and asyncBlurFields
+    // this line injects properties related to validation like: validate, warn, asyncValidate and asyncBlurFields
     ...customerDescriptor.form
 })
 export class CustomerForm extends React.Component {
