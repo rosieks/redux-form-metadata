@@ -5,7 +5,7 @@
 One of the most important part of this description are validation and warning rules.
 
 ## Instalation
----------
+
 `npm install --save redux-form-metadata`
 
 ## Getting Started
