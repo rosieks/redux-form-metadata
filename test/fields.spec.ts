@@ -18,11 +18,11 @@ describe('Fields description', () => {
     });
 
     it('should return error message if field is invalid', () => {
-        assert.equal(customerDescriptor.fields.name.validate(null), 'The Name field is required');
+        assert.equal(customerDescriptor.fields.name.validate(null), 'The Name field is required.');
     });
 
     it('should return error message if second rule is invalid', () => {
-        assert.equal(customerDescriptor.fields.name.validate('Very long name that is longer than 30 chartacters'), 'Thie field Name must be a string with a maximum length of 30');
+        assert.equal(customerDescriptor.fields.name.validate('Very long name that is longer than 30 chartacters'), 'Thie field Name must be a string with a maximum length of 30.');
     });
 
     it('should return undefined if field is valid', () => {
@@ -30,7 +30,7 @@ describe('Fields description', () => {
     });
 
     it('should return warning message if field is invalid', () => {
-        assert.equal(customerDescriptor.fields.name.warn('A'), 'Thie field Name must be a string with a minimum length of 2');
+        assert.equal(customerDescriptor.fields.name.warn('A'), 'Thie field Name must be a string with a minimum length of 2.');
     });
 
     it('should return undefined if field is valid', () => {

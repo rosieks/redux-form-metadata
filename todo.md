@@ -8,7 +8,7 @@
 - [x] Deep validation
 - [ ] Ability to run validation to
 - [ ] Refactor `describeType` to support extensibility. Validation should be one of extensions.
-- [ ] Class level validation
+- [x] Class level validation
 
 - [ ] Integration test for JSX/TSX
 - [x] Think about naming - `redux-form-describe` vs `redux-form-metadata` vs `redux-form-annotate`

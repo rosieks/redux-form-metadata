@@ -12,6 +12,10 @@ export type Customer = {
 };
 
 export const customerDescription = {
+    $form: {
+        validate: (values) => Object.keys(values).length > 0 ? true : 'Form level validation',
+        warn: (values) => Object.keys(values).length > 3 ? true : 'Form level warning'
+    },
     name: {
         label: 'Name',
         placeholder: 'Enter your name',

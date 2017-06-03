@@ -1,5 +1,7 @@
 export type IDescription<T> = {
     [P in keyof T]?: IFieldDescription<T[P]>
+} & {
+    $form?: any
 };
 
 export type IFieldDescription<T> = {
